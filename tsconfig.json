@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "strictNullChecks": true,
+        "lib": ["es2017","dom"],
+        "downlevelIteration": true,
+        "outDir": "dist",
+        "typeRoots": ["./src/@types","./node_modules/@types"]
+    },
+    "files": [
+        "src/factory.ts",
+        "src/factory_g.ts",
+        "src/iface.ts",
+        "demo/f.ts",
+        "demo/g.ts",
+        "demo/test_iface.ts"
+    ]
+}

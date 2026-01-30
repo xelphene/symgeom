@@ -1,0 +1,9 @@
+IDEAS*.md
+NOW.md
+sketch_*
+*_log.txt
+dist/
+TODO.md
+node_modules/
+package-lock.json
+sketch/
