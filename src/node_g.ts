@@ -6,7 +6,8 @@ import {
 } from './iface'
 import {geomfunc} from './geomfunc'
 
-function nodeArraysEqual( a:XNode[], b:XNode[] ): boolean
+//function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
+function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 {
     if( a.length != b.length ) return false
     const indexes = Array.from(a, (v,i) => i)
@@ -31,6 +32,7 @@ function isPoint( v: number | Point ): v is Point {
 
 abstract class ValueGetter<T> {
     abstract compute( input:Map<string,any> ): T;
+    abstract equals(  other:ValueGetter<T> ): boolean;
 }
 
 class InputValueGetter<T> extends ValueGetter<T> {
@@ -53,6 +55,12 @@ class InputValueGetter<T> extends ValueGetter<T> {
         } else
             throw new Error(`no input with key ${this.inputKey}`)
     }
+
+    equals( other:ValueGetter<T> ): boolean {
+        if( other instanceof InputValueGetter )
+            return this.inputKey == other.inputKey
+        return false
+    }
 }
 
 class FuncValueGetter<T> extends ValueGetter<T> {
@@ -72,6 +80,13 @@ class FuncValueGetter<T> extends ValueGetter<T> {
         const rv = this.func.apply(null, args)
         return rv
     }
+    
+    equals( other:ValueGetter<T> ): boolean {
+        if( other instanceof FuncValueGetter )
+            return other.func === this.func
+                && nodeArraysEqual(this.bindings, other.bindings)
+        return false
+    }
 }
 
 ////////////////////////////////////////////////
@@ -79,6 +94,7 @@ class FuncValueGetter<T> extends ValueGetter<T> {
 abstract class BaseNode
 {
     abstract compute( input:Map<string,any> ): any
+    abstract equals(  other:BaseNode ): boolean
 }
 
 abstract class ValueNode<T> extends BaseNode {
@@ -105,9 +121,16 @@ abstract class ValueNode<T> extends BaseNode {
     compute( input:Map<string,any> ): T {
         return this.vg.compute(input)
     }
+
+    equals( other:BaseNode ): boolean {
+        if( other instanceof ValueNode )
+            return this.vg.equals( other.vg )
+        else
+            return false
+    }
 }
 
-export class NumberValueNode extends ValueNode<number> 
+export class NumberValueNode extends ValueNode<number> implements NumberNode
 {
     isMyType: ( v: number | Point ) => v is number = isNumber
 
@@ -116,7 +139,7 @@ export class NumberValueNode extends ValueNode<number>
     }
 }
 
-export class PointValueNode extends ValueNode<Point>
+export class PointValueNode extends ValueNode<Point> implements PointNode
 {
     isMyType: ( v: number | Point ) => v is Point = isPoint
     

@@ -17,6 +17,9 @@ function main ()
     console.log( dy.compute(input) )
     console.log( ipt.compute(input) )
     console.log( dpt.compute(input) )
+    
+    console.log( dpt.equals(ipt.xlateUp(dy)) ) // true
+    console.log( dpt.equals(dy) ) // false 
 }
 
 if( require.main === module )
