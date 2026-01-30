@@ -1,5 +1,7 @@
 
-import {Point} from 'octogeom'
+import {
+    Point, Line, UnitVector
+} from 'octogeom'
 import {
     PointReturningFunction, NumberReturningFunction,
     XNode, PointNode, NumberNode
@@ -25,6 +27,10 @@ function isNumber( v: number | Point ): v is number {
 
 function isPoint( v: number | Point ): v is Point {
     return v instanceof Point
+}
+
+function isUnitVector( v: number | UnitVector ): v is UnitVector {
+    return v instanceof UnitVector
 }
 
 
@@ -139,6 +145,19 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
     }
 }
 
+export class UnitVectorValueNode extends ValueNode<UnitVector>
+{
+    isMyType: ( v: number | UnitVector ) => v is UnitVector = isUnitVector
+
+    apply(  func:(...args: any[]) => UnitVector, bindings:BaseNode[] ): UnitVectorValueNode {
+        return new UnitVectorValueNode( func, bindings )
+    }
+    
+    rotate90ccw(): UnitVectorValueNode {
+        return this.apply( geomfunc.unitVector.rotate90ccw, [this] )
+    }
+}
+
 export class PointValueNode extends ValueNode<Point> implements PointNode
 {
     isMyType: ( v: number | Point ) => v is Point = isPoint
@@ -150,5 +169,66 @@ export class PointValueNode extends ValueNode<Point> implements PointNode
     xlateUp( n:NumberValueNode ): PointValueNode {
         return this.apply( geomfunc.point.xlateUp, [this, n] )
     }
+    
+    ymirror(): PointValueNode {
+        return this.apply( geomfunc.point.ymirror, [this] )
+    }
+    
+    xlateUnitVector( dir:UnitVectorValueNode, dist:NumberValueNode ): PointValueNode {
+        return this.apply( geomfunc.point.xlateUnitVector, [this, dir, dist])
+    }
 }
 
+/*
+export class LineValueNode extends ValueNode<Line> implements LineNode
+{
+    isMyType: ( v: number | Line ) => v is Line = isLine
+    
+    apply(  func:(...args: any[]) => Line, bindings:BaseNode[] ): LineValueNode {
+        return new LineValueNode( func, bindings )
+    }
+}
+*/
+
+export class LineSimpleNode extends BaseNode {
+    start:PointValueNode
+    end:PointValueNode
+    constructor( start:PointValueNode, end:PointValueNode ) {
+        super()
+        this.start = start
+        this.end = end
+    }
+
+    compute( input:Map<string,any> ): Line {
+        return new Line( this.start.compute(input), this.end.compute(input) )
+    }
+    
+    equals(  other:BaseNode ): boolean {
+        if( other instanceof LineSimpleNode )
+            return this.start.equals(other.start)
+                && this.end.equals(other.end)
+        else
+            return false
+    }
+    
+    ymirror(): LineSimpleNode {
+        return new LineSimpleNode(
+            this.start.ymirror(),
+            this.end.ymirror()
+        )
+    }
+    
+    toUnitVector(): UnitVectorValueNode {
+        return new UnitVectorValueNode(
+            geomfunc.line.toUnitVector,
+            [this]
+        )
+    }
+
+    xlateUnitVector( dir:UnitVectorValueNode, dist:NumberValueNode ): LineSimpleNode {
+        return new LineSimpleNode(
+            this.start.xlateUnitVector(dir,dist),
+            this.end.xlateUnitVector(dir,dist)
+        )
+    }
+}
