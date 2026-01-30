@@ -13,6 +13,7 @@
         "src/iface.ts",
         "demo/f.ts",
         "demo/g.ts",
-        "demo/test_iface.ts"
+        "demo/test_iface.ts",
+        "demo/node_g.ts"
     ]
 }

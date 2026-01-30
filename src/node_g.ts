@@ -26,22 +26,12 @@ function isPoint( v: number | Point ): v is Point {
     return v instanceof Point
 }
 
-function makeInputCompute (key) {
-    return 
-}
 
-abstract class BaseNode
-{
-    abstract compute( input:Map<string,any> ): any
-}
-
-const INPUT = Symbol('INPUT')
+///////////////////////////////
 
 abstract class ValueGetter<T> {
     abstract compute( input:Map<string,any> ): T;
 }
-
-///////////////////////////////
 
 class InputValueGetter<T> extends ValueGetter<T> {
     inputKey:string
@@ -86,6 +76,11 @@ class FuncValueGetter<T> extends ValueGetter<T> {
 
 ////////////////////////////////////////////////
 
+abstract class BaseNode
+{
+    abstract compute( input:Map<string,any> ): any
+}
+
 abstract class ValueNode<T> extends BaseNode {
     vg: ValueGetter<T>
 
@@ -112,84 +107,16 @@ abstract class ValueNode<T> extends BaseNode {
     }
 }
 
-/*
-//////////////////////////////////////////////
-// combination of old Compute and InputNode
-abstract class ValueNode_OLD<T> extends BaseNode
-{
-    bindings: (BaseNode | typeof INPUT)[]
-    func: (...args: any[]) => T
-    _inputKey: string
-    // a constructor
-    //static input( key:string ): ValueNode<T> {
-    //    const cf = (input:Map<string,any>): T => {
-    //        
-    //    }
-    //}
-    
-    abstract isMyType: ( v: any ) => v is T
-    
-    constructor( func:(...args: any[]) => T, bindings:BaseNode[] ) {
-        super()
-        this.func = func
-        this.bindings = bindings
-        this._inputKey = 'dy'
-    }
-
-    _computeFromInput( input:Map<string,any> ): T {
-        const v = input.get(this._inputKey)
-        if( v !== undefined ) {
-            if( this.isMyType(v) )
-                return v
-            else
-                throw new Error(`input ${this._inputKey} has incorrect type`)
-        } else
-            throw new Error(`no input with key ${this._inputKey}`)
-    }
-    
-    compute( input:Map<string,any> ): T {
-        const args = this.bindings.map( n => n===INPUT ? input : n.compute(input) )
-        const rv = this.func.apply(null, [])
-        return rv
-    }
-    
-    wtf () {
-        console.log( this.constructor )
-        const C = this.constructor
-        console.log( this.constructor === PointValueNode )
-    }
-    
-    abstract apply(  func:(...args: any[]) => T, bindings:BaseNode[] ): ValueNode<T>;
-}
-*/
-
-class NumberValueNode extends ValueNode<number> 
+export class NumberValueNode extends ValueNode<number> 
 {
     isMyType: ( v: number | Point ) => v is number = isNumber
-/*    
-    static makeInput( inputKey:string ): NumberValueNode {
-        function computeFromInput( input:Map<string,any> ): number {
-            console.log('num')
-            console.log(input)
-            const v = input.get(inputKey)
-            if( v !== undefined ) {
-                if( typeof v == 'number' )
-                    return v
-                else
-                    throw new Error(`input ${this.inputKey} has incorrect type`)
-            } else
-                throw new Error(`no input with key ${this.inputKey}`)
-        }
-        return new NumberValueNode( computeFromInput, [] )
-    }
 
-*/
     apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
         return new NumberValueNode( func, bindings )
     }
 }
 
-class PointValueNode extends ValueNode<Point>
+export class PointValueNode extends ValueNode<Point>
 {
     isMyType: ( v: number | Point ) => v is Point = isPoint
     
@@ -202,39 +129,3 @@ class PointValueNode extends ValueNode<Point>
     }
 }
 
-/*
-function makePointInput( inputKey:string): PointValueNode {
-    function computeFromInput( input:Map<string,any> ): Point {
-        console.log('point')
-        console.log( input )
-        const v = input.get(inputKey)
-        console.log(v)
-        if( v !== undefined ) {
-            if( v instanceof Point )
-                return v
-            else
-                throw new Error(`input ${this.inputKey} has incorrect type`)
-        } else
-            throw new Error(`no input with key ${this.inputKey}`)
-    }
-    return new PointValueNode( computeFromInput, [] )
-}
-*/
-
-function main () 
-{
-    const dy = new NumberValueNode('dy')
-    const ipt = new PointValueNode('ipt')
-    const dpt = ipt.xlateUp(dy)
-    
-    var input = new Map<string,any>()
-    input.set('dy', 10)
-    input.set('ipt', new Point(2,2))
-
-    console.log( dy.compute(input) )
-    console.log( ipt.compute(input) )
-    console.log( dpt.compute(input) )
-}
-
-if( require.main === module )
-    main()
