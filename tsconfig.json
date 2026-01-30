@@ -9,6 +9,7 @@
     "files": [
         "src/factory.ts",
         "src/factory_g.ts",
+        "src/node_g.ts",
         "src/iface.ts",
         "demo/f.ts",
         "demo/g.ts",
