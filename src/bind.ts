@@ -3,7 +3,8 @@ import {PointReturningFunction, NumberReturningFunction} from '../src/iface'
 import {
     Point, Line, UnitVector
 } from 'octogeom'
-import {BaseNode, isPoint, isNumber} from './node_g'
+import {BaseNode} from './node_g'
+import {isPoint, isNumber, guardPoint, guardNumber} from './guard'
 
 export function bindPoint( bindings:BaseNode[], func:Function ):
     PointReturningFunction

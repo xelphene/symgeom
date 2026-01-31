@@ -71,8 +71,8 @@ function main2 ()
 
 function main_guard() {
     const i = new NumberValueNode('i')
-    const j = i.guard( v => v**2, [i] )
-    const x = i.guard( v => 'x', [] ) // compute should fail
+    const j = i.computeWith( v => v**2 )
+    const x = i.computeWith( v => 'x' ) // compute should fail
     
     var input = new Map<string,any>()
     input.set('i', 10)
@@ -90,5 +90,5 @@ function main_guard() {
 }
 
 if( require.main === module )
-    main2()
-    //main_guard()
+    //main2()
+    main_guard()

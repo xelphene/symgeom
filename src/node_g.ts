@@ -7,6 +7,10 @@ import {
     XNode, PointNode, NumberNode
 } from './iface'
 import {geomfunc} from './geomfunc'
+import {
+    isNumber, isPoint, isUnitVector,
+    guardPoint, guardNumber
+} from './guard'
 
 //function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
@@ -20,18 +24,6 @@ function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 }
 
 ///////////////////////////////////////////
-
-export function isNumber( v: number | any ): v is number {
-    return typeof v == 'number'
-}
-
-export function isPoint( v: Point | any ): v is Point {
-    return v instanceof Point
-}
-
-export function isUnitVector( v: UnitVector | any ): v is UnitVector {
-    return v instanceof UnitVector
-}
 
 export function isBaseNodeArray( v: BaseNode[] | any ): v is BaseNode[] {
     return Array.isArray(v)
@@ -167,15 +159,8 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
     //    return new NumberValueNode( func, args )
     //}
 
-    guard(  func:Function, bindings:BaseNode[] ): NumberValueNode {
-        const guardedFunc = (...args: any[]): number => {
-            const rv = func.apply(null, args)
-            if( this.isMyType(rv) )
-                return rv
-            else
-                throw new TypeError(`compute function returned incorrect type`)
-        }
-        return new NumberValueNode( guardedFunc, bindings )
+    computeWith( func:Function ): NumberValueNode {
+        return new NumberValueNode( guardNumber(func), [this] )
     }
 }
 
