@@ -38,9 +38,9 @@ function main2 ()
     input.set('saWidth', 0.5)
 
     console.log( '== line:')
-    console.log( end_.compute(input) )
-    console.log( line.compute(input) )
-    console.log( line_.compute(input) )
+    console.log( end_.compute(input) ) // Point -5, 17
+    console.log( line.compute(input) ) // Line { start: Point { x: 3, y: 20 }, end: Point { x: 5, y: 17 } }
+    console.log( line_.compute(input) ) // Line { start: Point { x: -3, y: 20 }, end: Point { x: -5, y: 17 } }
     
     console.log( line_.end.equals(end_) ) // true
 
@@ -49,24 +49,24 @@ function main2 ()
     const uv = line.toUnitVector()
     console.log( uv.compute(input) )
     console.log( uv.compute(input).unicodeArrow )
-    console.log( uv.compute(input).directionAngle )
+    console.log( uv.compute(input).directionAngle ) // 303.69
     console.log( uv.rotate90ccw().compute(input).unicodeArrow )
-    console.log( uv.rotate90ccw().compute(input).directionAngle )
+    console.log( uv.rotate90ccw().compute(input).directionAngle ) // 33.69
     
     console.log('== sa')
     
-    console.log(saLine.compute(input))
+    console.log(saLine.compute(input)) // Line { start: Point { x: 3.416, y: 20.277 }, end: Point { x: 5.416, y: 17.277 } }
     console.log(
         saLine.start.equals(
             start.xlateUnitVector( line.toUnitVector().rotate90ccw(), saWidth )
         )
-    )
+    ) // true
     const _saStart = saLine.start.compute(input)
     const _start = start
         .xlateUnitVector( line.toUnitVector().rotate90ccw(), saWidth )
         .compute(input)
-    console.log(_saStart)
-    console.log(_start)
+    console.log(_saStart) // Point { x: 3.416, y: 20.277 }
+    console.log(_start)   // Point { x: 3.416, y: 20.277 }
 }
 
 function main_guard() {
@@ -90,4 +90,5 @@ function main_guard() {
 }
 
 if( require.main === module )
-    main_guard()
+    main2()
+    //main_guard()
