@@ -2,12 +2,16 @@
 declare module "octogeom" {
     export class Point {
         constructor( x:number, y:number );
+        x: number;
+        y: number;
         ymirror(): Point;
         xlateUp(number): Point;
         xlateUnitVector(UnitVector,number): Point;
     }
     export class Line {
         constructor( start:Point, end:Point );
+        start: Point;
+        end: Point;
         ymirror(): Line;
         toUnitVector(): UnitVector;
         xlateUnitVector(dir:UnitVector, dist:number): Line

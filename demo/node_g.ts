@@ -90,5 +90,6 @@ function main_guard() {
 }
 
 if( require.main === module )
+    main()
     //main2()
-    main_guard()
+    //main_guard()
