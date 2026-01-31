@@ -47,6 +47,11 @@ function main () {
     console.log('========')
     const result = nm.compute(inputMapped)
     console.log( result )
+
+    console.log('========')
+    const inputExpn = nm.expnInput()
+    console.log('...')
+    console.log(inputExpn)
 }
 
 if( require.main === module )

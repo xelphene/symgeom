@@ -106,6 +106,7 @@ export abstract class BaseNode
 {
     abstract compute( input:InputMap ): any
     abstract equals(  other:BaseNode ): boolean
+    abstract get takesInput(): boolean
 }
 
 abstract class ValueNode<T> extends BaseNode {
@@ -126,6 +127,10 @@ abstract class ValueNode<T> extends BaseNode {
                 bindings = []
             this.vg = new FuncValueGetter<T>( this, keyOrFunc, bindings )
         }
+    }
+
+    get takesInput(): boolean {
+        return this.vg instanceof InputValueGetter
     }
     
     compute( input:InputMap ): T {
@@ -256,6 +261,10 @@ export class LineSimpleNode extends BaseNode {
 
     compute( input:InputMap ): Line {
         return new Line( this.start.compute(input), this.end.compute(input) )
+    }
+
+    get takesInput(): boolean {
+        return false
     }
     
     equals(  other:BaseNode ): boolean {

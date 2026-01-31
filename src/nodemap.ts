@@ -69,4 +69,39 @@ export class NodeMap
     add( key:string, member:(BaseNode|NodeMap) ) {
         this._map.set(key, member)
     }
+    
+    expnInput( path?:string[] ): Map<BaseNode,string[][]> {
+        if( path===undefined )
+            path=[]
+        
+        const inputMap = new Map<BaseNode,string[][]>()
+        for( let [key,member] of this._map.entries() )
+        {
+            if( member instanceof BaseNode && member.takesInput ) 
+            {
+                console.log('found input:')
+                console.log(member)
+                const ev = inputMap.get(member)
+                if( ev===undefined )
+                    inputMap.set(member, [ path.concat([key]) ])
+                else
+                    inputMap.set(member, 
+                        ev.concat( path.concat([key]) )
+                    )
+            } else if( member instanceof NodeMap ) {
+                const subExpns = member.expnInput( path.concat([key]) )
+                for( let [node,expns] of subExpns.entries() ) {
+                    const ev = inputMap.get(node)
+                    if( ev===undefined )
+                        inputMap.set(node, expns)
+                    else
+                        inputMap.set(node, 
+                            ev.concat(expns)
+                        )
+                }
+                    
+            }
+        }
+        return inputMap
+    }
 }
