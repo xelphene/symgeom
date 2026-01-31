@@ -1,5 +1,6 @@
 
 import {Point} from 'octogeom'
+import {BoundPointFunc, BoundNumberFunc} from './bind'
 /*
 interface Line {
     start: Point
@@ -20,7 +21,7 @@ export type PointReturningFunction = (...args: any[]) => Point
 export type NumberReturningFunction = (...args: any[]) => number
 
 export interface NumberNode {
-    map( func:NumberReturningFunction ): NumberNode
+    map( BoundNumberFunc ): NumberNode
     compute( input:Map<string,any> ): number
     equals( node:XNode ): boolean
 }
@@ -33,15 +34,15 @@ export interface PointNode {
     //x: NumberNode
     //y: NumberNode
     
-    map( func:PointReturningFunction ): PointNode
+    map( BoundPointFunc ): PointNode
     equals( node:XNode ): boolean
     compute( input:Map<string,any> ): Point
 
     // once I moved map() into ValueNode<T>, these broke. I don't
     // really understand why. 
     // exception is something to do with the return type on map being ValueNode<T>
-    //ymirror(): PointNode
-    //xlateUp( n:NumberNode ): PointNode
+    ymirror(): PointNode
+    xlateUp( n:NumberNode ): PointNode
     //xlateUnitVector( dir:UnitVectorNode, dist:NumberNode ): PointNode
     //lineTo( end:PointNode ): LineNode
 }

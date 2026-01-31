@@ -11,6 +11,7 @@ import {
     isNumber, isPoint, isUnitVector,
     guardPoint, guardNumber
 } from './guard'
+import {BoundPointFunc, BoundNumberFunc} from './bind'
 
 //function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
@@ -135,13 +136,14 @@ abstract class ValueNode<T> extends BaseNode {
         bindings?: BaseNode[]
     ): ValueNode<T>
     
+    /*
     map(  func:(...args: any[]) => T ): ValueNode<T> {
         if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
             return this.remake( func, func.bindings.concat([this]) )
         } else
             return this.remake( func, [this] )
     }
-    
+    */
 }
 
 export class NumberValueNode extends ValueNode<number> implements NumberNode
@@ -152,13 +154,17 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
         keyOrFunc: string | ((...args: any[]) => number),
         bindings?: BaseNode[]
     ): NumberValueNode {
-        return new NumberValueNode(keyOrFunc, bindings)
+        return new NumberValueNode(keyOrFunc, bindings )
     }
 
     //apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
     //    return new NumberValueNode( func, args )
     //}
-
+    
+    map( m:BoundNumberFunc ): NumberValueNode {
+        return new NumberValueNode( m.func, m.bindings.concat([this]) )
+    }
+    
     computeWith( func:Function ): NumberValueNode {
         return new NumberValueNode( guardNumber(func), [this] )
     }
@@ -198,6 +204,10 @@ export class PointValueNode extends ValueNode<Point> implements PointNode
     //apply(  func:(...args: any[]) => Point, bindings:BaseNode[] ): PointValueNode {
     //    return new PointValueNode( func, bindings )
     //}
+
+    map( m:BoundPointFunc ): PointValueNode {
+        return new PointValueNode( m.func, m.bindings.concat([this]) )
+    }
     
     xlateUp( n:NumberValueNode ): PointValueNode {
         return new PointValueNode( geomfunc.point.xlateUp, [this, n] )
