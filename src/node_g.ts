@@ -118,9 +118,8 @@ abstract class ValueNode<T> extends BaseNode {
             this.vg = new InputValueGetter<T>( this, keyOrFunc )
         } else {
             if( bindings===undefined )
-                throw new Error('wtf')
-            else
-                this.vg = new FuncValueGetter<T>( this, keyOrFunc, bindings )
+                bindings = []
+            this.vg = new FuncValueGetter<T>( this, keyOrFunc, bindings )
         }
     }
     
