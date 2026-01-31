@@ -16,6 +16,8 @@ export type BoundNumberFunc = {
     func: (...args: any[]) => number
 }
 
+type BoundFunc = (BoundPointFunc | BoundNumberFunc)
+
 export function bindPoint( bindings:BaseNode[], func:Function ):
     BoundPointFunc
 {

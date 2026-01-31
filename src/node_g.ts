@@ -12,6 +12,8 @@ import {
     guardPoint, guardNumber
 } from './guard'
 import {BoundPointFunc, BoundNumberFunc} from './bind'
+import {NodeMap} from './nodemap'
+export type InputMap = Map<(string|BaseNode|NodeMap),any>
 
 //function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
@@ -34,7 +36,7 @@ export function isBaseNodeArray( v: BaseNode[] | any ): v is BaseNode[] {
 ///////////////////////////////
 
 abstract class ValueGetter<T> {
-    abstract compute( input:Map<string,any> ): T;
+    abstract compute( input:InputMap ): T;
     abstract equals(  other:ValueGetter<T> ): boolean;
 }
 
@@ -48,10 +50,15 @@ class InputValueGetter<T> extends ValueGetter<T> {
         this.inputKey = inputKey
     }
     
-    compute( input:Map<string,any> ): T {
-        const v = input.get(this.inputKey)
+    compute( input:InputMap ): T {
+        var v = input.get(this.inputKey)
+
+        if( v===undefined ) {
+            v = input.get(this.node)
+        }
+            
         if( v !== undefined ) {
-            if(this. node.isMyType(v) )
+            if( this.node.isMyType(v) )
                 return v
             else
                 throw new Error(`input ${this.inputKey} has incorrect type`)
@@ -78,7 +85,7 @@ class FuncValueGetter<T> extends ValueGetter<T> {
         this.bindings = bindings
     }
     
-    compute( input:Map<string,any> ): T {
+    compute( input:InputMap ): T {
         const args = this.bindings.map( n => n.compute(input) )
         const rv = this.func.apply(null, args)
         return rv
@@ -96,7 +103,7 @@ class FuncValueGetter<T> extends ValueGetter<T> {
 
 export abstract class BaseNode
 {
-    abstract compute( input:Map<string,any> ): any
+    abstract compute( input:InputMap ): any
     abstract equals(  other:BaseNode ): boolean
 }
 
@@ -120,7 +127,7 @@ abstract class ValueNode<T> extends BaseNode {
         }
     }
     
-    compute( input:Map<string,any> ): T {
+    compute( input:InputMap ): T {
         return this.vg.compute(input)
     }
 
@@ -246,7 +253,7 @@ export class LineSimpleNode extends BaseNode {
         this.end = end
     }
 
-    compute( input:Map<string,any> ): Line {
+    compute( input:InputMap ): Line {
         return new Line( this.start.compute(input), this.end.compute(input) )
     }
     

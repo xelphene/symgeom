@@ -10,7 +10,9 @@
         "src/node_g.ts",
         "src/iface.ts",
         "src/bind.ts",
+        "src/nodemap.ts",
         "demo/node_g.ts",
-        "demo/map.ts"
+        "demo/map.ts",
+        "demo/nodemap.ts"
     ]
 }
