@@ -9,6 +9,8 @@
     "files": [
         "src/node_g.ts",
         "src/iface.ts",
-        "demo/node_g.ts"
+        "src/bind.ts",
+        "demo/node_g.ts",
+        "demo/map.ts"
     ]
 }

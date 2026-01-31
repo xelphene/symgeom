@@ -21,18 +21,22 @@ function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 
 ///////////////////////////////////////////
 
-function isNumber( v: number | Point ): v is number {
+export function isNumber( v: number | Point ): v is number {
     return typeof v == 'number'
 }
 
-function isPoint( v: number | Point ): v is Point {
+export function isPoint( v: number | Point ): v is Point {
     return v instanceof Point
 }
 
-function isUnitVector( v: number | UnitVector ): v is UnitVector {
+export function isUnitVector( v: number | UnitVector ): v is UnitVector {
     return v instanceof UnitVector
 }
 
+export function isBaseNodeArray( v: any | BaseNode[] ): v is BaseNode[] {
+    return Array.isArray(v)
+        && v.map( v => v instanceof BaseNode).reduce( (a,b) => a && b )
+}
 
 ///////////////////////////////
 
@@ -97,7 +101,7 @@ class FuncValueGetter<T> extends ValueGetter<T> {
 
 ////////////////////////////////////////////////
 
-abstract class BaseNode
+export abstract class BaseNode
 {
     abstract compute( input:Map<string,any> ): any
     abstract equals(  other:BaseNode ): boolean
@@ -142,6 +146,12 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
     //apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
     //    return new NumberValueNode( func, args )
     //}
+    map(  func:(...args: any[]) => number ): NumberValueNode {
+        if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
+            return new NumberValueNode( func, func.bindings.concat([this]) )
+        } else
+            return new NumberValueNode( func, [this] )
+    }
 
     guard(  func:Function, bindings:BaseNode[] ): NumberValueNode {
         const guardedFunc = (...args: any[]): number => {
@@ -175,7 +185,13 @@ export class PointValueNode extends ValueNode<Point> implements PointNode
     //apply(  func:(...args: any[]) => Point, bindings:BaseNode[] ): PointValueNode {
     //    return new PointValueNode( func, bindings )
     //}
-
+    map(  func:(...args: any[]) => Point ): PointValueNode {
+        if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
+            return new PointValueNode( func, func.bindings.concat([this]) )
+        } else
+            return new PointValueNode( func, [this] )
+    }
+    
     xlateUp( n:NumberValueNode ): PointValueNode {
         return new PointValueNode( geomfunc.point.xlateUp, [this, n] )
     }
@@ -242,3 +258,4 @@ export class LineSimpleNode extends BaseNode {
         )
     }
 }
+
