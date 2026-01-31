@@ -137,21 +137,35 @@ abstract class ValueNode<T> extends BaseNode {
         else
             return false
     }
+    
+    abstract remake(
+        keyOrFunc: string | ((...args: any[]) => T),
+        bindings?: BaseNode[]
+    ): ValueNode<T>
+    
+    map(  func:(...args: any[]) => T ): ValueNode<T> {
+        if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
+            return this.remake( func, func.bindings.concat([this]) )
+        } else
+            return this.remake( func, [this] )
+    }
+    
 }
 
 export class NumberValueNode extends ValueNode<number> implements NumberNode
 {
     isMyType: ( v: number | Point ) => v is number = isNumber
 
+    remake(
+        keyOrFunc: string | ((...args: any[]) => number),
+        bindings?: BaseNode[]
+    ): NumberValueNode {
+        return new NumberValueNode(keyOrFunc, bindings)
+    }
+
     //apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
     //    return new NumberValueNode( func, args )
     //}
-    map(  func:(...args: any[]) => number ): NumberValueNode {
-        if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
-            return new NumberValueNode( func, func.bindings.concat([this]) )
-        } else
-            return new NumberValueNode( func, [this] )
-    }
 
     guard(  func:Function, bindings:BaseNode[] ): NumberValueNode {
         const guardedFunc = (...args: any[]): number => {
@@ -169,6 +183,13 @@ export class UnitVectorValueNode extends ValueNode<UnitVector>
 {
     isMyType: ( v: number | UnitVector ) => v is UnitVector = isUnitVector
 
+    remake(
+        keyOrFunc: string | ((...args: any[]) => UnitVector),
+        bindings?: BaseNode[]
+    ): UnitVectorValueNode {
+        return new UnitVectorValueNode(keyOrFunc, bindings)
+    }
+
     //apply(  func:(...args: any[]) => UnitVector, bindings:BaseNode[] ): UnitVectorValueNode {
     //    return new UnitVectorValueNode( func, bindings )
     //}
@@ -181,16 +202,17 @@ export class UnitVectorValueNode extends ValueNode<UnitVector>
 export class PointValueNode extends ValueNode<Point> implements PointNode
 {
     isMyType: ( v: number | Point ) => v is Point = isPoint
+
+    remake(
+        keyOrFunc: string | ((...args: any[]) => Point),
+        bindings?: BaseNode[]
+    ): PointValueNode {
+        return new PointValueNode(keyOrFunc, bindings)
+    }
     
     //apply(  func:(...args: any[]) => Point, bindings:BaseNode[] ): PointValueNode {
     //    return new PointValueNode( func, bindings )
     //}
-    map(  func:(...args: any[]) => Point ): PointValueNode {
-        if( 'bindings' in func && isBaseNodeArray(func.bindings) ) {
-            return new PointValueNode( func, func.bindings.concat([this]) )
-        } else
-            return new PointValueNode( func, [this] )
-    }
     
     xlateUp( n:NumberValueNode ): PointValueNode {
         return new PointValueNode( geomfunc.point.xlateUp, [this, n] )

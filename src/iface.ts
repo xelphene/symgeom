@@ -37,8 +37,11 @@ export interface PointNode {
     equals( node:XNode ): boolean
     compute( input:Map<string,any> ): Point
 
+    // once I moved map() into ValueNode<T>, these broke. I don't
+    // really understand why. 
+    // exception is something to do with the return type on map being ValueNode<T>
     //ymirror(): PointNode
-    xlateUp( n:NumberNode ): PointNode
+    //xlateUp( n:NumberNode ): PointNode
     //xlateUnitVector( dir:UnitVectorNode, dist:NumberNode ): PointNode
     //lineTo( end:PointNode ): LineNode
 }
