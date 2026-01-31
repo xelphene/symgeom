@@ -27,9 +27,9 @@ export class NodeMap
     // compute func
     //map( BoundFunc ): NodeMap {}
 
-    mapInputs( input:Map<string,any> ): Map<(BaseNode|NodeMap),any>
+    mapInputs( input:Map<string,any> ): Map<BaseNode,any>
     {
-        const downInput = new Map<(BaseNode|NodeMap),any>()
+        const downInput = new Map<BaseNode,any>()
 
         for( let [iKey,iValue] of input.entries() ) {
             const member = this._map.get(iKey)
@@ -39,78 +39,33 @@ export class NodeMap
 
             if( member instanceof BaseNode )
                 downInput.set(member, iValue)
-            else if( member instanceof NodeMap )
-                downInput.set(member, member.mapInputs(iValue))
+            else if( member instanceof NodeMap ) {
+                const subInput = member.mapInputs(iValue)
+                for( let [sKey,sValue] of subInput.entries() )
+                    downInput.set(sKey, sValue)
+            }
             else
                 throw new Error('wtf')
         }
         return downInput
     }
 
-    compute( input:Map<(BaseNode|NodeMap),any> ): Map<string,any>
+    compute( input:Map<BaseNode,any> ): Map<string,any>
     {
         const values = new Map<string,any>()
         for( let [key,member] of this._map.entries() ) 
         {
-            const inputValue = input.get(member)
-            //if( inputValue===undefined )
-            //    throw new Error(`missing input`)
-            
             if( member instanceof BaseNode ) {
                 values.set(key, member.compute(input))
+            
             } else if( member instanceof NodeMap ) {
-                //const input2 = input.get(key)
-                //if( input2
-                const input2 = input.get(member)
-                if( isMappedInput(input2) ) {
-                    values.set(key, member.compute(input2) )
-                } else
-                    throw new Error('incorrect type for sub input')
+                values.set(key, member.compute(input))
             } else
                 throw new Error('wtf')
         }
         return values
     }
 
-    /*
-    // output will be actual values
-    compute( input:Map<string,any> ): Map<string,any>
-    {
-        const downInput = new Map<(BaseNode|NodeMap),any>()
-        for( let [iKey,iValue] of input.entries() ) {
-            const member = this._map.get(iKey)
-            if( member===undefined )
-                throw new Error(`no node for input ${iKey}`)
-            downInput.set(member, iValue)
-        }
-        
-        const values = new Map<string,any>()
-        
-        for( let [key,member] of this._map.entries() ) 
-        {
-            if( member instanceof BaseNode ) {
-                //let di = downInput.get(member)
-                //if( di instanceof InputMap )
-                //    let value = member.compute(di)
-                //else
-                //    throw new Error('node input type error')
-                let value = member.compute(downInput)
-                values.set(key,value)
-            } else if( member instanceof NodeMap ) {
-                let di = downInput.get(member)
-                if( di instanceof Map<string,any> )
-                    let value = member.compute(di)
-                else
-                    throw new Error('down input error')
-                values.set(key,value)
-            } else throw
-                new Error('wtf')
-        }
-
-        return values
-    }
-    */
-    
     add( key:string, member:(BaseNode|NodeMap) ) {
         this._map.set(key, member)
     }

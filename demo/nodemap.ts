@@ -34,13 +34,15 @@ function main () {
     input.set('dstPt', new Point(99,99))
     input.set('sub', new Map<string,any>())
     input.get('sub').set('e',20)
-    input.set('W', 0.1)
+    // these two W sets do the same thing
+    //input.set('W', 0.1)
+    input.get('sub').set('W', 0.1)
     
     const inputMapped = nm.mapInputs(input)
-    //console.log( inputMapped )
-    console.log( inputMapped.get(sub) )
-    console.log( inputMapped.get(ptA) )
-    console.log( ptAx.compute(inputMapped) )
+    console.log( inputMapped )
+    //console.log( inputMapped.get(sub) )
+    //console.log( inputMapped.get(ptA) )
+    //console.log( ptAx.compute(inputMapped) )
 
     console.log('========')
     const result = nm.compute(inputMapped)

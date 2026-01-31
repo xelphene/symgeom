@@ -13,7 +13,8 @@ import {
 } from './guard'
 import {BoundPointFunc, BoundNumberFunc} from './bind'
 import {NodeMap} from './nodemap'
-export type InputMap = Map<(string|BaseNode|NodeMap),any>
+
+export type InputMap = Map<(string|BaseNode),any>
 
 //function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
