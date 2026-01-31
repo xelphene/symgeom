@@ -21,19 +21,19 @@ function nodeArraysEqual( a:BaseNode[], b:BaseNode[] ): boolean
 
 ///////////////////////////////////////////
 
-export function isNumber( v: number | Point ): v is number {
+export function isNumber( v: number | any ): v is number {
     return typeof v == 'number'
 }
 
-export function isPoint( v: number | Point ): v is Point {
+export function isPoint( v: Point | any ): v is Point {
     return v instanceof Point
 }
 
-export function isUnitVector( v: number | UnitVector ): v is UnitVector {
+export function isUnitVector( v: UnitVector | any ): v is UnitVector {
     return v instanceof UnitVector
 }
 
-export function isBaseNodeArray( v: any | BaseNode[] ): v is BaseNode[] {
+export function isBaseNodeArray( v: BaseNode[] | any ): v is BaseNode[] {
     return Array.isArray(v)
         && v.map( v => v instanceof BaseNode).reduce( (a,b) => a && b )
 }
@@ -154,7 +154,7 @@ abstract class ValueNode<T> extends BaseNode {
 
 export class NumberValueNode extends ValueNode<number> implements NumberNode
 {
-    isMyType: ( v: number | Point ) => v is number = isNumber
+    isMyType: ( v: number | any ) => v is number = isNumber
 
     remake(
         keyOrFunc: string | ((...args: any[]) => number),
@@ -181,7 +181,7 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
 
 export class UnitVectorValueNode extends ValueNode<UnitVector>
 {
-    isMyType: ( v: number | UnitVector ) => v is UnitVector = isUnitVector
+    isMyType: ( v: UnitVector | any ) => v is UnitVector = isUnitVector
 
     remake(
         keyOrFunc: string | ((...args: any[]) => UnitVector),
@@ -201,7 +201,7 @@ export class UnitVectorValueNode extends ValueNode<UnitVector>
 
 export class PointValueNode extends ValueNode<Point> implements PointNode
 {
-    isMyType: ( v: number | Point ) => v is Point = isPoint
+    isMyType: ( v: Point | any ) => v is Point = isPoint
 
     remake(
         keyOrFunc: string | ((...args: any[]) => Point),
