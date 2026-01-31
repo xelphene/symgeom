@@ -7,13 +7,8 @@
         "typeRoots": ["./src/@types","./node_modules/@types"]
     },
     "files": [
-        "src/factory.ts",
-        "src/factory_g.ts",
         "src/node_g.ts",
         "src/iface.ts",
-        "demo/f.ts",
-        "demo/g.ts",
-        "demo/test_iface.ts",
         "demo/node_g.ts"
     ]
 }
