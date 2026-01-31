@@ -69,5 +69,25 @@ function main2 ()
     console.log(_start)
 }
 
+function main_guard() {
+    const i = new NumberValueNode('i')
+    const j = i.guard( v => v**2, [i] )
+    const x = i.guard( v => 'x', [] ) // compute should fail
+    
+    var input = new Map<string,any>()
+    input.set('i', 10)
+    
+    console.log( i.compute(input) ) // 10
+    console.log( j.compute(input) ) // 100
+    try {
+        console.log( x.compute(input) )
+    } catch(e) {
+        if( e instanceof TypeError )
+            console.log(`threw expected TypeError: ${e}`)
+        else
+            throw e
+    }
+}
+
 if( require.main === module )
-    main2()
+    main_guard()

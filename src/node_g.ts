@@ -142,6 +142,17 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
     apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
         return new NumberValueNode( func, bindings )
     }
+
+    guard(  func:Function, bindings:BaseNode[] ): NumberValueNode {
+        const guardedFunc = (...args: any[]): number => {
+            const rv = func.apply(null, args)
+            if( this.isMyType(rv) )
+                return rv
+            else
+                throw new TypeError(`compute function returned incorrect type`)
+        }
+        return new NumberValueNode( guardedFunc, bindings )
+    }
 }
 
 export class UnitVectorValueNode extends ValueNode<UnitVector>
