@@ -220,6 +220,10 @@ export class PointValueNode extends ValueNode<Point> implements PointNode
     xlateUnitVector( dir:UnitVectorValueNode, dist:NumberValueNode ): PointValueNode {
         return new PointValueNode( geomfunc.point.xlateUnitVector, [this, dir, dist])
     }
+    
+    lineTo( endPt: PointValueNode ): LineSimpleNode {
+        return new LineSimpleNode(this, endPt )
+    }
 }
 
 /*

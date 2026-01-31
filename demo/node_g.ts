@@ -20,6 +20,12 @@ function main ()
     
     console.log( dpt.equals(ipt.xlateUp(dy)) ) // true
     console.log( dpt.equals(dy) ) // false 
+
+    console.log('lineTo')
+    const toPt = new PointValueNode('toPt')
+    input.set('toPt', new Point(99,99) )
+    const line = dpt.lineTo(toPt)
+    console.log( line.compute( input ) )
 }
 
 function main2 ()
