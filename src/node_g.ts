@@ -139,9 +139,9 @@ export class NumberValueNode extends ValueNode<number> implements NumberNode
 {
     isMyType: ( v: number | Point ) => v is number = isNumber
 
-    apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
-        return new NumberValueNode( func, bindings )
-    }
+    //apply(  func:(...args: any[]) => number, bindings:BaseNode[] ): NumberValueNode {
+    //    return new NumberValueNode( func, args )
+    //}
 
     guard(  func:Function, bindings:BaseNode[] ): NumberValueNode {
         const guardedFunc = (...args: any[]): number => {
@@ -159,12 +159,12 @@ export class UnitVectorValueNode extends ValueNode<UnitVector>
 {
     isMyType: ( v: number | UnitVector ) => v is UnitVector = isUnitVector
 
-    apply(  func:(...args: any[]) => UnitVector, bindings:BaseNode[] ): UnitVectorValueNode {
-        return new UnitVectorValueNode( func, bindings )
-    }
+    //apply(  func:(...args: any[]) => UnitVector, bindings:BaseNode[] ): UnitVectorValueNode {
+    //    return new UnitVectorValueNode( func, bindings )
+    //}
     
     rotate90ccw(): UnitVectorValueNode {
-        return this.apply( geomfunc.unitVector.rotate90ccw, [this] )
+        return new UnitVectorValueNode( geomfunc.unitVector.rotate90ccw, [this] )
     }
 }
 
@@ -172,20 +172,20 @@ export class PointValueNode extends ValueNode<Point> implements PointNode
 {
     isMyType: ( v: number | Point ) => v is Point = isPoint
     
-    apply(  func:(...args: any[]) => Point, bindings:BaseNode[] ): PointValueNode {
-        return new PointValueNode( func, bindings )
-    }
+    //apply(  func:(...args: any[]) => Point, bindings:BaseNode[] ): PointValueNode {
+    //    return new PointValueNode( func, bindings )
+    //}
 
     xlateUp( n:NumberValueNode ): PointValueNode {
-        return this.apply( geomfunc.point.xlateUp, [this, n] )
+        return new PointValueNode( geomfunc.point.xlateUp, [this, n] )
     }
     
     ymirror(): PointValueNode {
-        return this.apply( geomfunc.point.ymirror, [this] )
+        return new PointValueNode( geomfunc.point.ymirror, [this] )
     }
     
     xlateUnitVector( dir:UnitVectorValueNode, dist:NumberValueNode ): PointValueNode {
-        return this.apply( geomfunc.point.xlateUnitVector, [this, dir, dist])
+        return new PointValueNode( geomfunc.point.xlateUnitVector, [this, dir, dist])
     }
 }
 

@@ -20,7 +20,7 @@ export type PointReturningFunction = (...args: any[]) => Point
 export type NumberReturningFunction = (...args: any[]) => number
 
 export interface NumberNode {
-    apply( func:NumberReturningFunction, bindings:XNode[] ): NumberNode
+    //apply( func:NumberReturningFunction, bindings:XNode[] ): NumberNode
     compute( input:Map<string,any> ): number
     equals( node:XNode ): boolean
 }
@@ -33,7 +33,7 @@ export interface PointNode {
     //x: NumberNode
     //y: NumberNode
     
-    apply( func:PointReturningFunction, bindings:XNode[] ): PointNode
+    //apply( func:PointReturningFunction, bindings:XNode[] ): PointNode
     equals( node:XNode ): boolean
     compute( input:Map<string,any> ): Point
 
