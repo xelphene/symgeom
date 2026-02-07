@@ -13,6 +13,7 @@
         "src/nodemap.ts",
         "demo/node_g.ts",
         "demo/map.ts",
-        "demo/nodemap.ts"
+        "demo/nodemap.ts",
+        "demo/biject_simple.ts"
     ]
 }
