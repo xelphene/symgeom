@@ -69,6 +69,24 @@ export class NodeMap
     add( key:string, member:(BaseNode|NodeMap) ) {
         this._map.set(key, member)
     }
+    set( key:string, member:(BaseNode|NodeMap) ) {
+        this._map.set(key, member)
+    }
+    
+    get( key:string ): (BaseNode|NodeMap) {
+        const v = this._map.get(key)
+        if( v === undefined )
+            throw new Error(`no member named ${key}`)
+        return v
+    }
+
+    getNode( key:string ): BaseNode {
+        const v = this._map.get(key)
+        if( v instanceof BaseNode )
+            return v
+        else
+            throw new Error(`no member / non-node named ${key}`)
+    }
     
     expnInput( path?:string[] ): Map<BaseNode,string[][]> {
         if( path===undefined )
