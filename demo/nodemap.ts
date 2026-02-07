@@ -1,7 +1,7 @@
 
 import {Point} from 'octogeom'
 import {NodeMap} from '../src/nodemap'
-import {NumberValueNode, PointValueNode} from '../src/node_g'
+import {NumberValueNode, PointValueNode, LineSimpleNode} from '../src/node_g'
 
 function main () {
     const dy = new NumberValueNode('dy')
