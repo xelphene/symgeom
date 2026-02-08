@@ -1,10 +1,12 @@
 
 import {BaseNode} from './node_g'
 import {InputMap} from './node_g'
+import {BuildProxyIface, makeBuildProxy} from './buildproxy'
 
 type NodeMapInputMap = Map<string,any>
 
 type MappedInput = Map<(BaseNode|NodeMap),any>
+
 function isMappedInput( v: MappedInput | any ): v is MappedInput {
     if( v instanceof Map )
         return [...v.keys()]
@@ -65,7 +67,7 @@ export class NodeMap
         }
         return values
     }
-
+    
     computeWith( input:{[key:string]:any} ): {[key:string]:any} {
         const im = new Map<string,any>( Object.entries(input) )
         const im2 = this.mapInputs( im )
@@ -127,5 +129,9 @@ export class NodeMap
             }
         }
         return inputMap
+    }
+    
+    getBuildProxy(): BuildProxyIface {
+        return makeBuildProxy(this)
     }
 }

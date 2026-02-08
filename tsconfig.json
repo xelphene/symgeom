@@ -12,9 +12,11 @@
         "src/iface.ts",
         "src/bind.ts",
         "src/nodemap.ts",
+        "src/buildproxy.ts",
         "demo/node_g.ts",
         "demo/map.ts",
         "demo/nodemap.ts",
-        "demo/sh_simple.ts"
+        "demo/sh_simple.ts",
+        "demo/buildproxy.ts"
     ]
 }
