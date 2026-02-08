@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "alwaysStrict": true,
         "strictNullChecks": true,
         "lib": ["es2017","dom"],
         "downlevelIteration": true,
@@ -14,6 +15,6 @@
         "demo/node_g.ts",
         "demo/map.ts",
         "demo/nodemap.ts",
-        "demo/biject_simple.ts"
+        "demo/sh_simple.ts"
     ]
 }
