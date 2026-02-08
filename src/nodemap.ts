@@ -66,6 +66,12 @@ export class NodeMap
         return values
     }
 
+    computeWith( input:{[key:string]:any} ): {[key:string]:any} {
+        const im = new Map<string,any>( Object.entries(input) )
+        const im2 = this.mapInputs( im )
+        return Object.fromEntries( this.compute( im2 ).entries() )
+    }
+
     add( key:string, member:(BaseNode|NodeMap) ) {
         this._map.set(key, member)
     }
